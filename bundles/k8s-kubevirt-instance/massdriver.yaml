@@ -1,0 +1,54 @@
+schema: draft-07
+name: "k8s-kubevirt-instance"
+description: "An instance of KubeVirt for managing VMs in a EKS cluster. Requires the KubeVirt operator be installed."
+source_url: github.com/massdriver-cloud/webinar-kubevirt-eks
+access: private
+type: infrastructure
+
+
+steps:
+  - path: src
+    provisioner: terraform
+
+
+params:
+  required:
+    - kubernetes
+  properties:
+    kubernetes:
+      type: object
+      title: Kubernetes Configuration
+      required:
+      - namespace
+      - node_group_name
+      properties:
+        namespace:
+          type: string
+          title: Namespace
+          description: Namespace to install KubeVirt instance into
+          default: kubevirt
+        node_group_name:
+          type: string
+          title: Node Group Name
+          description: Name of the node group to schedule workloads onto
+          default: ""
+
+
+connections:
+  required:
+    - aws_authentication
+    - kubernetes_cluster
+  properties:
+    aws_authentication:
+      $ref: massdriver/aws-iam-role
+    kubernetes_cluster:
+      $ref: massdriver/kubernetes-cluster
+
+
+artifacts:
+  properties: {}
+
+
+ui:
+  ui:order:
+    - "*"

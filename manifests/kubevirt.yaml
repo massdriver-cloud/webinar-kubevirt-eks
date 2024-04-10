@@ -1,0 +1,25 @@
+apiVersion: kubevirt.io/v1
+kind: KubeVirt
+metadata:
+  name: kubevirt
+  namespace: kubevirt
+spec:
+  certificateRotateStrategy: {}
+  configuration:
+    developerConfiguration:
+      featureGates: []
+  customizeComponents: {}
+  imagePullPolicy: IfNotPresent
+  workloadUpdateStrategy: {}
+  infra:
+    nodePlacement:
+      tolerations:
+        - key: CriticalAddonsOnly
+          operator: Exists
+  workloads:
+    nodePlacement:
+      tolerations:
+        - key: vm
+          operator: Exists
+      nodeSelector:
+        eks.amazonaws.com/nodegroup: # fill in node group name

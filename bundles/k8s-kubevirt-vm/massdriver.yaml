@@ -1,0 +1,97 @@
+schema: draft-07
+name: "k8s-kubevirt-vm"
+description: "An instance of a VM using KubeVirt. Requires the KubeVirt operator to be installed."
+source_url: github.com/massdriver-cloud/webinar-kubevirt-eks
+access: private
+type: infrastructure
+
+steps:
+  - path: src
+    provisioner: terraform
+
+
+params:
+  required:
+    - kubernetes
+    - vm
+  properties:
+    kubernetes:
+      type: object
+      title: Kubernetes Configuration
+      required:
+      - namespace
+      - node_group_name
+      properties:
+        namespace:
+          type: string
+          title: Namespace
+          description: Namespace to install KubeVirt instance into
+          default: kubevirt
+        node_group_name:
+          type: string
+          title: Node Group Name
+          description: Name of the node group to schedule workloads onto
+          default: ""
+    vm:
+      type: object
+      title: VM Configuration
+      required:
+      - image
+      - resources
+      properties:
+        image:
+          type: string
+          title: Image
+          description: VM image to use
+          default: "quay.io/containerdisks/fedora:latest"
+        resources:
+          type: object
+          title: Resources
+          description: Resource requirements of the VM
+          required:
+          - cpu
+          - memory
+          properties:
+            cpu:
+              title: CPU Cores
+              description: The expected CPU cores required for this VM. Fractional numbers are allowed (0.5 is one half of a CPU core).
+              type: number
+              minimum: 0.001
+            memory:
+              title: Memory
+              description: The expected Memory resources required for this application.
+              type: integer
+
+
+connections:
+  required:
+    - aws_authentication
+    - kubernetes_cluster
+  properties:
+    aws_authentication:
+      $ref: massdriver/aws-iam-role
+    kubernetes_cluster:
+      $ref: massdriver/kubernetes-cluster
+
+
+artifacts:
+  properties: {}
+
+
+ui:
+  ui:order:
+    - kubernetes
+    - vm
+    - "*"
+  kubernetes:
+    ui:order:
+      - namespace
+      - node_group_name
+  vm:
+    ui:order:
+      - image
+      - resources
+    resources:
+      memory:
+        ui:field: conversionFieldData
+        unit: Bytes

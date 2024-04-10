@@ -1,0 +1,47 @@
+apiVersion: kubevirt.io/v1
+kind: VirtualMachine
+metadata:
+  name: testvm
+spec:
+  running: true
+  template:
+    spec:
+      domain:
+        devices:
+          disks:
+          - disk:
+              bus: virtio
+            name: containerdisk
+          - disk:
+              bus: virtio
+            name: cloudinitdisk
+          rng: {}
+        resources:
+          requests:
+            cpu: 1
+            memory: 1024M
+      terminationGracePeriodSeconds: 0
+      # accessCredentials:
+      # - sshPublicKey:
+      #     source:
+      #       secret:
+      #         secretName: my-pub-key
+      #     propagationMethod:
+      #       configDrive: {}
+      # nodeSelector:
+      #   eks.amazonaws.com/nodegroup: # fill in node group name
+      # tolerations:
+      # - key: "vm"
+      #   operator: "Equal"
+      #   value: "true"
+      #   effect: "NoSchedule"
+      volumes:
+      - containerDisk:
+          image: quay.io/containerdisks/fedora:latest
+        name: containerdisk
+      - cloudInitConfigDrive:
+          userData: |-
+            #cloud-config
+            password: fedora
+            chpasswd: { expire: False }
+        name: cloudinitdisk

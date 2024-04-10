@@ -1,0 +1,7 @@
+apiVersion: v1
+appVersion: "1.2.0"
+description: Installs the KubeVirt Operator to enable scheduling VM workloads in a Kubernetes cluster.
+keywords:
+- kubevirt
+name: kubevirt
+version: 0.0.1

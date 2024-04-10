@@ -1,0 +1,42 @@
+schema: draft-07
+name: "k8s-kubevirt-operator"
+description: "Installs the KubeVirt Operator to enable scheduling VM workloads in a Kubernetes cluster."
+source_url: github.com/massdriver-cloud/webinar-kubevirt-eks
+access: private
+type: infrastructure
+
+steps:
+  - path: chart
+    provisioner: helm
+
+params:
+  required:
+    - provisioner
+  properties:
+    provisioner:
+      type: object
+      title: Provisioner Configuration
+      required:
+        - namespace
+      properties:
+        namespace:
+          title: Namespace
+          type: string
+          default: kubevirt
+
+
+connections:
+  required:
+  - kubernetes_cluster
+  properties:
+    kubernetes_cluster:
+      $ref: massdriver/kubernetes-cluster
+
+
+artifacts:
+  properties: {}
+
+
+ui:
+  ui:order:
+    - "*"
