@@ -16,10 +16,10 @@ spec:
       tolerations:
         - key: CriticalAddonsOnly
           operator: Exists
-  workloads:
-    nodePlacement:
-      tolerations:
-        - key: vm
-          operator: Exists
-      nodeSelector:
-        eks.amazonaws.com/nodegroup: # fill in node group name
+  # workloads:
+  #   nodePlacement:
+  #     tolerations:
+  #       - key: vm
+  #         operator: Exists
+  #     nodeSelector:
+  #       eks.amazonaws.com/nodegroup: # fill in node group name
